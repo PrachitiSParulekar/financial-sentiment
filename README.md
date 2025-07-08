@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🚀 Financial Sentiment Analysis AI
 
 **Production-ready backend NLP system for financial news sentiment analysis**
