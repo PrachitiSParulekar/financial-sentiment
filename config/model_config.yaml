@@ -1,0 +1,174 @@
+# Model configuration for Financial Sentiment AI
+# Professional configuration for model paths, thresholds, and parameters
+
+# Model Settings
+models:
+  vader:
+    version: "1.0"
+    financial_lexicon_weight: 1.5
+    context_window: 10
+    threshold_positive: 0.1
+    threshold_negative: -0.1
+    
+  finbert:
+    model_name: "ProsusAI/finbert"
+    version: "1.0"
+    use_cuda: true
+    max_length: 512
+    batch_size: 8
+    confidence_threshold: 0.7
+    uncertainty_threshold: 0.8
+
+# News Sources Configuration
+news_sources:
+  newsapi:
+    enabled: true
+    api_key: "${NEWSAPI_KEY}"  # Set environment variable
+    max_requests_per_hour: 500
+    default_language: "en"
+    default_country: "us"
+    
+  rss:
+    enabled: true
+    sources:
+      - "https://feeds.bloomberg.com/markets/news.rss"
+      - "https://feeds.reuters.com/reuters/businessNews"
+      - "https://rss.cnn.com/rss/money_topstories.rss"
+      - "https://feeds.finance.yahoo.com/rss/2.0/headline"
+    refresh_interval_minutes: 30
+
+# Text Processing
+text_processing:
+  max_text_length: 1000
+  min_text_length: 10
+  remove_urls: true
+  remove_mentions: true
+  remove_hashtags: false
+  normalize_whitespace: true
+  
+  financial_keywords:
+    - "earnings"
+    - "revenue"
+    - "profit"
+    - "loss"
+    - "stock"
+    - "share"
+    - "market"
+    - "trading"
+    - "investment"
+    - "dividend"
+    - "acquisition"
+    - "merger"
+    - "IPO"
+    - "SEC"
+    - "FDA"
+
+# Entity Recognition
+entity_recognition:
+  extract_tickers: true
+  extract_companies: true
+  extract_financial_terms: true
+  ticker_patterns:
+    - "\\b[A-Z]{1,5}\\b"  # 1-5 uppercase letters
+  
+  company_confidence_threshold: 0.8
+  
+# Pipeline Configuration
+pipeline:
+  batch_size: 10
+  max_concurrent_requests: 5
+  timeout_seconds: 30
+  retry_attempts: 3
+  cache_results: true
+  cache_ttl_hours: 24
+
+# Logging and Storage
+storage:
+  default_backend: "sqlite"
+  sqlite:
+    database_path: "data/financial_sentiment.db"
+    enable_wal: true
+    
+  json:
+    directory: "data/json_logs"
+    rotate_logs: true
+    max_file_size_mb: 100
+    
+  mongodb:
+    connection_string: "${MONGODB_URI}"
+    database_name: "financial_sentiment"
+    collection_name: "sentiment_results"
+
+# Model Performance Monitoring
+monitoring:
+  enable_drift_detection: true
+  drift_window_hours: 24
+  drift_thresholds:
+    confidence_drop: 0.2
+    sentiment_shift: 0.3
+    prediction_variance: 0.4
+    
+  performance_metrics:
+    calculate_accuracy: true
+    calculate_precision_recall: true
+    calculate_f1_score: true
+    track_processing_time: true
+    
+  alert_webhooks:
+    enabled: false
+    urls: []
+
+# API and CLI Settings
+api:
+  rate_limiting:
+    requests_per_minute: 60
+    requests_per_hour: 1000
+    
+  authentication:
+    require_api_key: false
+    api_key: "${API_KEY}"
+
+cli:
+  default_output_format: "summary"
+  default_max_articles: 50
+  default_history_days: 7
+  enable_color_output: true
+  
+# Development and Testing
+development:
+  debug_mode: false
+  log_level: "INFO"
+  test_mode: false
+  mock_api_responses: false
+  
+  test_keywords:
+    - "Apple earnings"
+    - "Tesla stock"
+    - "Federal Reserve"
+    - "Bitcoin price"
+    
+# Model Comparison
+model_comparison:
+  enable_consensus: true
+  consensus_strategy: "weighted_average"  # options: majority_vote, weighted_average, highest_confidence
+  
+  weights:
+    vader: 0.4
+    finbert: 0.6
+    
+  disagreement_threshold: 0.3
+  require_manual_review: true
+
+# Export Settings
+export:
+  formats:
+    - "json"
+    - "csv"
+    - "excel"
+  
+  include_metadata: true
+  include_raw_scores: true
+  include_entities: true
+  
+  csv_separator: ","
+  json_indent: 2
